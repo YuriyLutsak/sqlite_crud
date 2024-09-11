@@ -6,14 +6,6 @@ import 'package:sqlite_crud/data/todo_db.dart';
 class DataBaseService {
   Database? _database;
 
-  Future<Database> get dataBase async {
-    if (_database != null) {
-      return _database!;
-    }
-    _database = await _initialize();
-    return _database!;
-  }
-
   Future<String> get fullPath async {
     const name = 'to.db';
     final path = await getDatabasesPath();
@@ -22,9 +14,17 @@ class DataBaseService {
 
   Future<Database> _initialize() async {
     final path = await fullPath;
-    var databese = await openDatabase(path,
+    var database = await openDatabase(path,
         version: 1, onCreate: create, singleInstance: true);
-    return databese;
+    return database;
+  }
+
+  Future<Database> get dataBase async {
+    if (_database != null) {
+      return _database!;
+    }
+    _database = await _initialize();
+    return _database!;
   }
 
   Future<void> create(Database database, int version) async{
